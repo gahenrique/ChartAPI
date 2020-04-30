@@ -1,2 +1,1 @@
-# ChartAPI
- 
+# ChartAPI plot graphs with matplotlib and return them as png
