@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, abort
+from flask import Flask, request, make_response, abort, json
 from flask_cors import CORS
 from service import Charts
 
@@ -12,7 +12,6 @@ def home():
 @app.route('/plot/line', methods=['POST'])
 def plot_api():
     # json {"x": [n], "y": [n], "labels": [n]}
-
     if not request.json or "x" not in request.json or "y" not in request.json or "labels" not in request.json:
         abort(400)
 
@@ -31,12 +30,13 @@ def plot_api():
 @app.route('/plot/pie', methods=['POST'])
 def plot_pie():
     # json {"sizes": [n], "labels": [n]}
+    jsonData = request.get_json()
 
-    if not request.json or "sizes" not in request.json or "labels" not in request.json:
+    if not jsonData or "sizes" not in jsonData or "labels" not in jsonData:
         abort(400)
     
-    sizes = request.json.get("sizes")
-    labels = request.json.get("labels")
+    sizes = jsonData.get("sizes")
+    labels = jsonData.get("labels")
 
     if len(sizes) != len(labels):
         abort(400)
@@ -46,6 +46,5 @@ def plot_pie():
     response.headers.set('Content-Type', 'image/png')
     return response
 
-
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run(port=8000, debug=True)
